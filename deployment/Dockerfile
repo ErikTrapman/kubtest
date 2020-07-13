@@ -9,6 +9,7 @@ RUN mkdir -p /var/www/app/
 WORKDIR /var/www/app
 
 RUN apt update && apt install -y git
+# TODO call build with param to be able to do the checkout with specific tag
 RUN git clone https://github.com/ErikTrapman/kubtest.git /var/www/app
 RUN ls -al /var/www/app
 
