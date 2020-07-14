@@ -17,16 +17,15 @@
     <div class="mb-5"></div>
     <div class="jumbotron">
         <h1 class="display-4">Are you not entertained?!</h1>
-        <p class="lead">.</p>
         <hr class="my-4">
         <!--        <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>-->
     </div>
 
-    <pre>
-        <?php
-        print_r($_SERVER);
-        ?>
-    </pre>
+    <ul class="list-group">
+        <li class="list-group-item">Gladiator</li>
+        <li class="list-group-item">Pulp Fiction</li>
+        <li class="list-group-item">Silence of the Lambs</li>
+    </ul>
 </div>
 </body>
 </html>
