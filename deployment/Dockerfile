@@ -3,6 +3,7 @@
 # docker build --tag eriktrapman/kubtest-php:0.0.1 .
 # docker push eriktrapman/kubtest-php:0.0.1 
 # docker run --name=kubtest -p 8080:80 eriktrapman/kubtest-php
+# TODO change for alpine?
 FROM php:7.4-fpm-buster
 
 RUN mkdir -p /var/www/app/

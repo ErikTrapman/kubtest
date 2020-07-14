@@ -8,6 +8,7 @@ kind: Deployment
 metadata:
     name: kubtest-php
 spec:
+    replicas: 2
     selector:
         matchLabels:
             run: kubtest-php
@@ -18,7 +19,7 @@ spec:
         spec:
             containers:
                 - name: demo
-                  image: eriktrapman/kubtest-php
+                  image: eriktrapman/kubtest-php:6ba0c0e23c700db5ad67db14ae12e390e3f66194
                   ports:
                       - containerPort: 80
 ---
