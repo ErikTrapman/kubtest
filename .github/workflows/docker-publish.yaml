@@ -18,34 +18,40 @@ jobs:
         if: github.event_name == 'push'
 
         steps:
-            - uses: actions/checkout@v2
+            -   uses: actions/checkout@v2
 
-            - name: Build image
-              run: docker build . --file deployment/Dockerfile --tag $IMAGE_NAME
+            -   name: Build image
+                run: docker build . --file deployment/Dockerfile --tag $IMAGE_NAME
 
-            - name: Log into registry
-              run: echo '${{ secrets.DOCKER_PASSWORD }}' | docker login --username eriktrapman --password-stdin
-              #run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+            -   name: Log into registry
+                run: echo '${{ secrets.DOCKER_PASSWORD }}' | docker login --username eriktrapman --password-stdin
+                #run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
 
-            - name: Push image
-              run: |
-                  IMAGE_ID=eriktrapman/$IMAGE_NAME
+            -   name: Push image
+                run: |
+                    IMAGE_ID=eriktrapman/$IMAGE_NAME
 
-                  # Change all uppercase to lowercase
-                  IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+                    # Change all uppercase to lowercase
+                    IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
 
-                  # Strip git ref prefix from version
-                  # VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+                    # Strip git ref prefix from version
+                    # VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
 
-                  # Strip "v" prefix from tag name
-                  # [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+                    # Strip "v" prefix from tag name
+                    # [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
 
-                  # Use Docker `latest` tag convention
-                  # [ "$VERSION" == "master" ] && VERSION=latest
-                  VERSION=${{ github.sha }}
+                    # Use Docker `latest` tag convention
+                    # [ "$VERSION" == "master" ] && VERSION=latest
+                    VERSION=${{ github.sha }}
 
-                  echo IMAGE_ID=$IMAGE_ID
-                  echo VERSION=$VERSION
+                    echo IMAGE_ID=$IMAGE_ID
+                    echo VERSION=$VERSION
 
-                  docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
-                  docker push $IMAGE_ID:$VERSION
+                    docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
+                    docker push $IMAGE_ID:$VERSION
+
+            -   uses: actions-hub/kubectl@master
+                env:
+                    KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+                with:
+                    args: apply -f deployment/deployment-digitalocean.yaml
