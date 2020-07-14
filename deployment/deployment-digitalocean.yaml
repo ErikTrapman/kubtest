@@ -15,7 +15,7 @@ spec:
         spec:
             containers:
                 - name: demo
-                  image: eriktrapman/kubtest-php:4d0dd4087fdcafb843818c3cdcf248ad5d6efb7c
+                  image: eriktrapman/kubtest-php:f0b3334be898aa55099d39010d57c5c52105ab9e
                   ports:
                       - containerPort: 80
 ---
