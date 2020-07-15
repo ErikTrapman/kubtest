@@ -55,5 +55,4 @@ jobs:
                     KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
                     SHA: ${{ github.sha }}
                 with:
-                    entrypoint: /usr/bin/envsubst < deployment/deployment-digitalocean.yaml |
-                    args: apply -f -
+                    entrypoint: /usr/bin/envsubst < deployment/deployment-digitalocean.yaml | kubectl apply -f -
