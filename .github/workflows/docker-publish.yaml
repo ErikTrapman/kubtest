@@ -51,6 +51,8 @@ jobs:
                     docker push $IMAGE_ID:$VERSION
 
             -   uses: actions-hub/kubectl@master
+
+            -   name: Deploy
                 env:
                     KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
                     SHA: ${{ github.sha }}
