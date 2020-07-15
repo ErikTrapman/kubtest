@@ -32,6 +32,7 @@
                     <li class="list-group-item">Gladiator</li>
                     <li class="list-group-item">Pulp Fiction</li>
                     <li class="list-group-item">Inception</li>
+                    <li class="list-group-item">Magnolia</li>
                 </ul>
             </div>
         </div>
