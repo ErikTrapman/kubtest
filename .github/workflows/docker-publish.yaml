@@ -51,11 +51,11 @@ jobs:
                     docker push $IMAGE_ID:$VERSION
 
             -   uses: danielr1996/envsubst-action@1.0.0
+                env:
+                    SHA: ${{ github.sha }}
                 with:
                     input: deployment/deployment-digitalocean.yaml
                     output: deployment/deployment-digitalocean-modified.yaml
-                    env:
-                      SHA: ${{ github.sha }}
 
             -   uses: actions-hub/kubectl@master
                 env:
