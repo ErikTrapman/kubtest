@@ -53,5 +53,6 @@ jobs:
             -   uses: actions-hub/kubectl@master
                 env:
                     KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+                    SHA: ${{ github.sha }}
                 with:
-                    args: apply -f deployment/deployment-digitalocean.yaml
+                    args: envsubst < deployment/deployment-digitalocean.yaml | kubectl apply -f -
