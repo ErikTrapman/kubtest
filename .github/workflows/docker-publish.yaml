@@ -51,9 +51,9 @@ jobs:
                     docker push $IMAGE_ID:$VERSION
 
             -   uses: actions-hub/kubectl@master
-
-            -   name: Deploy
                 env:
                     KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
                     SHA: ${{ github.sha }}
-                run: envsubst < deployment/deployment-digitalocean.yaml | kubectl apply -f -
+                with:
+                    entrypoint: /usr/bin/envsubst < deployment/deployment-digitalocean.yaml |
+                    args: apply -f -
