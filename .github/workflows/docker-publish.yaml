@@ -55,7 +55,7 @@ jobs:
                     input: deployment/deployment-digitalocean.yaml
                     output: deployment/deployment-digitalocean-modified.yaml
                     env:
-                        SHA: ${{ github.sha }}
+                      SHA: ${{ github.sha }}
 
             -   uses: actions-hub/kubectl@master
                 env:
