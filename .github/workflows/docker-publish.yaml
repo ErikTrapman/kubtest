@@ -50,9 +50,15 @@ jobs:
                     docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
                     docker push $IMAGE_ID:$VERSION
 
+            -   uses: danielr1996/envsubst-action@1.0.0
+                with:
+                    env:
+                        SHA: ${{ github.sha }}
+                    input: deployment/deployment-digitalocean.yaml
+                    output: deployment/deployment-digitalocean-modified.yaml
+
             -   uses: actions-hub/kubectl@master
                 env:
                     KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-                    SHA: ${{ github.sha }}
                 with:
-                    entrypoint: /usr/bin/envsubst < deployment/deployment-digitalocean.yaml | kubectl apply -f -
+                    args: apply -f deployment/deployment-digitalocean-modified.yaml
