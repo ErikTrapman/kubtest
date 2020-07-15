@@ -52,10 +52,10 @@ jobs:
 
             -   uses: danielr1996/envsubst-action@1.0.0
                 with:
-                    env:
-                        SHA: ${{ github.sha }}
                     input: deployment/deployment-digitalocean.yaml
                     output: deployment/deployment-digitalocean-modified.yaml
+                    env:
+                        SHA: ${{ github.sha }}
 
             -   uses: actions-hub/kubectl@master
                 env:
