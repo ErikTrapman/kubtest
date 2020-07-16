@@ -26,7 +26,26 @@
                      class="card-img-top" class="card-img-top" alt="Card image cap">
                 <div class="card-body">
                     <h5 class="card-title">My favorite movies</h5>
-                    <p class="card-text">In non particluar order</p>
+                    <p class="card-text">
+                        <?php
+
+                        if (file_exists(__DIR__ . '/.env')) {
+                            foreach (file(__DIR__ . '/.env') as $entry) {
+                                putenv(trim($entry));
+                            }
+                        }
+
+                        if ($host = $_ENV['REDIS_HOST'] ?? getenv('REDIS_HOST')) {
+                            include 'predis/autoload.php';
+                            $redis = new \Predis\Client($host);
+                            if (!$redis->exists('card-text')) {
+                                $redis->set('card-text', 'In non particular order');
+                            } else {
+                                echo '<p>' . $redis->get('card-text') . '</p>';
+                            }
+                        }
+                        ?>
+                    </p>
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">Gladiator</li>
