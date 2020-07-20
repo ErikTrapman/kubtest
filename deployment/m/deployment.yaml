@@ -5,6 +5,14 @@
 # minikube dashboard --url=true
 
 # docker build -t kubtest-local .
+apiVersion: v1
+data:
+    REDIS_HOST: tcp://kubtest-redis-service:6379
+kind: ConfigMap
+metadata:
+    name: configmap
+    namespace: default
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -28,7 +36,7 @@ spec:
                         -   name: REDIS_HOST
                             valueFrom:
                                 configMapKeyRef:
-                                    name: minikubeconfigmap
+                                    name: configmap
                                     key: REDIS_HOST
 #                    volumeMounts:
 #                        - name: config-volume

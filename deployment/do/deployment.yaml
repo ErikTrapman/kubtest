@@ -4,7 +4,7 @@ data:
     REDIS_HOST: tcp://kubtest-redis-service:6379
 kind: ConfigMap
 metadata:
-    name: doconfigmap
+    name: configmap
     namespace: default
 ---
 apiVersion: apps/v1
@@ -30,7 +30,7 @@ spec:
                         -   name: REDIS_HOST
                             valueFrom:
                                 configMapKeyRef:
-                                    name: minikubeconfigmap
+                                    name: configmap
                                     key: REDIS_HOST
 ---
 apiVersion: v1
