@@ -35,7 +35,7 @@
                             }
                         }
 
-                        if ($host = $_ENV['REDIS_PORT']) {
+                        if ($host = $_ENV['REDIS_HOST']) {
                             include 'predis/autoload.php';
                             $redis = new \Predis\Client($host);
                             if (!$redis->exists('card-text')) {

@@ -1,9 +1,8 @@
 # working setup for minikube
-# minikube addons enable ingress
+# minikube start --driver=virtualbox && minikube addons enable ingress
 # kubectl get pods -n kube-system
-# kubectl apply -f deployment/deployment-minikube.yaml
+# kubectl apply -f deployment/m/deployment.yaml
 # minikube dashboard --url=true
-
 
 # docker build -t kubtest-local .
 apiVersion: apps/v1
@@ -11,7 +10,7 @@ kind: Deployment
 metadata:
     name: kubtest-php
 spec:
-    replicas: 2
+    replicas: 1 # easier debugging
     selector:
         matchLabels:
             run: kubtest-php
@@ -25,6 +24,20 @@ spec:
                     image: eriktrapman/kubtest-php:a604bd292e8ac5ef5fe3ddb19bfaced98f9162f1
                     ports:
                         -   containerPort: 80
+                    env:
+                        -   name: REDIS_HOST
+                            valueFrom:
+                                configMapKeyRef:
+                                    name: minikubeconfigmap
+                                    key: REDIS_HOST
+#                    volumeMounts:
+#                        - name: config-volume
+#                          mountPath: /app/.env
+#                          subPath: .env
+#            volumes:
+#                -   name: config-volume
+#                    configMap:
+#                        name: minikubeconfigmap
 #          env:
 #            - name: REDIS_PORT # is available by Docker-convenience. imagename_PORT https://github.com/docker-library/redis/issues/53
 #              value: "tcp://10.103.244.146:6379"
@@ -97,12 +110,11 @@ kind: Service
 metadata:
     name: kubtest-redis-service
     labels:
-        run: kubtest-redis # name of deployment ?
+        run: redis # name of deployment ?
 spec:
-    serviceName: redis-svc
     type: NodePort
     selector:
-        run: kubtest-redis # name of deployment ?
+        run: redis # name of deployment ?
         #pod-template-hash: 69fbb64bf9
     ports:
         # By default and for convenience, the `targetPort` is set to the same value as the `port` field.
