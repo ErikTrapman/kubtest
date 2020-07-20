@@ -3,6 +3,9 @@
 # kubectl get pods -n kube-system
 # kubectl apply -f deployment/deployment-minikube.yaml
 # minikube dashboard --url=true
+
+
+# docker build -t kubtest-local .
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -18,10 +21,13 @@ spec:
                 run: kubtest-php
         spec:
             containers:
-                - name: demo
-                  image: eriktrapman/kubtest-php:2c93c1d756442ef85a8e48c87b1d3bc4e6eb7358
-                  ports:
-                      - containerPort: 80
+                -   name: demo
+                    image: eriktrapman/kubtest-php:a604bd292e8ac5ef5fe3ddb19bfaced98f9162f1
+                    ports:
+                        -   containerPort: 80
+#          env:
+#            - name: REDIS_PORT # is available by Docker-convenience. imagename_PORT https://github.com/docker-library/redis/issues/53
+#              value: "tcp://10.103.244.146:6379"
 ---
 apiVersion: v1
 kind: Service
@@ -36,8 +42,8 @@ spec:
         #pod-template-hash: 69fbb64bf9
     ports:
         # By default and for convenience, the `targetPort` is set to the same value as the `port` field.
-        - port: 80
-          targetPort: 80
+        -   port: 80
+            targetPort: 80
             # Optional field
             # By default and for convenience, the Kubernetes control plane will allocate a port from a range (default: 30000-32767)
         #nodePort: 30007
@@ -50,9 +56,58 @@ metadata:
         ingress.kubernetes.io/rewrite-target: /
 spec:
     rules:
-        - http:
-              paths:
-                  - path: /
-                    backend:
-                        serviceName: kubtest-php-service
-                        servicePort: 80
+        -   http:
+                paths:
+                    -   path: /
+                        backend:
+                            serviceName: kubtest-php-service
+                            servicePort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: redis
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            run: redis
+    template:
+        metadata:
+            labels:
+                run: redis
+        spec:
+            volumes:
+                -   name: redis-storage
+                    emptyDir: {}
+            containers:
+                -   name: redis
+                    image: redis
+                    ports:
+                        -   containerPort: 6379
+                    volumeMounts:
+                        -   name: redis-storage
+                            mountPath: /data/k8s-redis
+                    resources:
+                        limits:
+                            memory: '128Mi'
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: kubtest-redis-service
+    labels:
+        run: kubtest-redis # name of deployment ?
+spec:
+    serviceName: redis-svc
+    type: NodePort
+    selector:
+        run: kubtest-redis # name of deployment ?
+        #pod-template-hash: 69fbb64bf9
+    ports:
+        # By default and for convenience, the `targetPort` is set to the same value as the `port` field.
+        -   port: 6379
+            targetPort: 6379
+            # Optional field
+            # By default and for convenience, the Kubernetes control plane will allocate a port from a range (default: 30000-32767)
+        #nodePort: 30007
