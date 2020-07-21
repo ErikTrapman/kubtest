@@ -8,14 +8,14 @@ FROM php:7.4-fpm-alpine
 RUN mkdir -p /var/www/app/
 WORKDIR /var/www/app
 
-RUN apt update && apt install -y git
+RUN apk add --no-cache git
 # TODO call build with param to be able to do the checkout with specific tag
 RUN git clone https://github.com/ErikTrapman/kubtest.git /var/www/app
 RUN ls -al /var/www/app
+RUN rm -rf /var/cache/apk/*
 
 EXPOSE 8080
 CMD ["/usr/local/bin/php", "-S", "0.0.0.0:80", "-t", "/var/www/app"]
-
 
 # Usage:
 # docker build -t docker-php-example .
