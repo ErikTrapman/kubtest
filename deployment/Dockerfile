@@ -14,9 +14,6 @@ RUN git clone https://github.com/ErikTrapman/kubtest.git /var/www/app
 RUN ls -al /var/www/app
 RUN rm -rf /var/cache/apk/*
 
-EXPOSE 8080
-CMD ["/usr/local/bin/php", "-S", "0.0.0.0:80", "-t", "/var/www/app"]
-
 # Usage:
 # docker build -t docker-php-example .
 # docker run -d -p 8080:80 docker-php-example
