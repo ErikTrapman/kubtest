@@ -50,15 +50,15 @@ jobs:
                     docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
                     docker push $IMAGE_ID:$VERSION
 
-            -   uses: danielr1996/envsubst-action@1.0.0
-                env:
-                    SHA: ${{ github.sha }}
-                with:
-                    input: deployment/do/deployment.yaml
-                    output: deployment/do/deployment-modified.yaml
-
-            -   uses: actions-hub/kubectl@master
-                env:
-                    KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-                with:
-                    args: apply -f deployment/do/deployment-modified.yaml
+#            -   uses: danielr1996/envsubst-action@1.0.0
+#                env:
+#                    SHA: ${{ github.sha }}
+#                with:
+#                    input: deployment/do/deployment.yaml
+#                    output: deployment/do/deployment-modified.yaml
+#
+#            -   uses: actions-hub/kubectl@master
+#                env:
+#                    KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+#                with:
+#                    args: apply -f deployment/do/deployment-modified.yaml
