@@ -11,7 +11,7 @@ metadata:
     name: configmap
     namespace: default
 data:
-    REDIS_HOST: tcp://kubtest-redis-service:6379
+    REDIS_HOST: tcp://redis:6379 # redis is metadata.name of the service
     SCRIPT_FILENAME: /var/www/app/index.php
 ---
 apiVersion: apps/v1
@@ -40,17 +40,6 @@ spec:
                                 configMapKeyRef:
                                     name: configmap
                                     key: REDIS_HOST
-#                    volumeMounts:
-#                        - name: config-volume
-#                          mountPath: /app/.env
-#                          subPath: .env
-#            volumes:
-#                -   name: config-volume
-#                    configMap:
-#                        name: minikubeconfigmap
-#          env:
-#            - name: REDIS_PORT # is available by Docker-convenience. imagename_PORT https://github.com/docker-library/redis/issues/53
-#              value: "tcp://10.103.244.146:6379"
 ---
 apiVersion: v1
 kind: Service
@@ -61,7 +50,6 @@ metadata:
 spec:
     selector:
         run: kubtest-php # name of deployment ?
-        #pod-template-hash: 69fbb64bf9
     ports:
         # By default and for convenience, the `targetPort` is set to the same value as the `port` field.
         -   port: 9000
@@ -89,51 +77,3 @@ spec:
                         backend:
                             serviceName: kubtest-php-service
                             servicePort: fastcgi
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-    name: redis
-spec:
-    replicas: 1
-    selector:
-        matchLabels:
-            run: redis
-    template:
-        metadata:
-            labels:
-                run: redis
-        spec:
-            volumes:
-                -   name: redis-storage
-                    emptyDir: {}
-            containers:
-                -   name: redis
-                    image: redis
-                    ports:
-                        -   containerPort: 6379
-                    volumeMounts:
-                        -   name: redis-storage
-                            mountPath: /data/k8s-redis
-                    resources:
-                        limits:
-                            memory: '128Mi'
----
-apiVersion: v1
-kind: Service
-metadata:
-    name: kubtest-redis-service
-    labels:
-        run: redis # name of deployment ?
-spec:
-    type: NodePort
-    selector:
-        run: redis # name of deployment ?
-        #pod-template-hash: 69fbb64bf9
-    ports:
-        # By default and for convenience, the `targetPort` is set to the same value as the `port` field.
-        -   port: 6379
-            targetPort: 6379
-            # Optional field
-            # By default and for convenience, the Kubernetes control plane will allocate a port from a range (default: 30000-32767)
-        #nodePort: 30007

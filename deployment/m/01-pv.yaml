@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+    name: pv
+    labels:
+        type: local
+spec:
+    capacity:
+        storage: 128Mi
+    accessModes:
+        - ReadWriteOnce
+        - ReadWriteMany
+    hostPath:
+        path: /mnt/data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+    name: claim-redis
+spec:
+    accessModes:
+        - ReadWriteOnce
+    resources:
+        requests:
+            storage: 128Mi
